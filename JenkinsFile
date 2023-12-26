@@ -1,36 +1,45 @@
 pipeline {
-   agent any {
-
+    agent any
 
     stages {
-         stage('checkout') {
+        stage('Checkout') {
             steps {
-              checkout scm
-              }
+                // Checkout the source code from SCM
+                checkout scm
+            }
         }
-        
-        
-        stage('build & test') {
-          steps {
-             script {
 
-              bat 'mvn clean package'
-              bat 'docker build -t dev-quiz-img'
-              
-              }
-          }
-       }
-          
+        stage('Build') {
+            steps {
+                // Build the application using Maven
+                script {
+                    echo 'Building the application'
+                    bat 'mvn clean package'
+                    echo 'Build successful'
+                }
+            }
+        }
+
         stage('Deploy') {
-           steps {
-              script {
-                    bat 'docker run -p 8081:8081 --name quiz dev-quiz-img'
-                  }
-            
-               }
-           
-           }
-       }
-       
-   }
+            steps {
+                // Build Docker image
+                script {
+                    echo 'Building Docker image'
+                    bat 'docker build -t dev-quiz-image .'
+                    echo 'Build successful'
+                }
+
+                // Deploy the application using Docker
+                bat 'docker run -p 8081:8081 --name quiz dev-quiz-image'
+            }
+        }
+    }
+
+    post {
+        always {
+            script {
+                // Cleanup steps, if any
+            }
+        }
+    }
 }
