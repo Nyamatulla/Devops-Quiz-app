@@ -1,0 +1,35 @@
+Pipeline {
+   agent any {
+
+
+    stages {
+         stage('checkout') {
+            steps {
+              checkout scm
+              }
+        }
+        
+        
+        stage('build & test') {
+          steps {
+             script {
+              def mvnHome = tool 'Maven'
+              sh "${mvnHome}/bin/mvn clean install"
+              
+              }
+          }
+       }
+          
+        stage('Deploy') {
+           steps {
+           script {
+                    sh 'java -jar target/quiz-app-1.0-SNAPSHOT.jar'
+                  }
+            
+            }
+           
+          }
+       }
+       
+  }
+}
