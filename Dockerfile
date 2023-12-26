@@ -11,5 +11,5 @@ COPY target/devops-quiz-1.0-SNAPSHOT.jar /app/devops-quiz.jar
 EXPOSE 8081
 
 # Run the application when the container launches
-CMD ["java", "-jar", "devops-quiz.jar"]
+CMD ["nohup", "java", "-jar", "devops-quiz.jar"]
 
