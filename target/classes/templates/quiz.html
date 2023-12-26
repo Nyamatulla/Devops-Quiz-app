@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <title>DevOps Quiz</title>
+</head>
+<body>
+    <h2>DevOps Quiz</h2>
+    <form action="/quiz" method="post">
+        <div th:each="question, questionIndex : ${questions}">
+            <p th:text="${question.question}"></p>
+            <div th:each="option, optionIndex : ${question.options}">
+                <input type="radio" th:name="'answers[' + ${questionIndex.index} + ']'" th:value="${optionIndex.index}">
+                <span th:text="${option}"></span>
+            </div>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
