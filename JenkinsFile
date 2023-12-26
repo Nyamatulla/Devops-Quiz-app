@@ -13,8 +13,8 @@ Pipeline {
         stage('build & test') {
           steps {
              script {
-              def mvnHome = tool 'Maven'
-              sh "${mvnHome}/bin/mvn clean install"
+              bat 'mvn clean package'
+              bat 'docker build -t dev-quiz-img'
               
               }
           }
@@ -23,7 +23,7 @@ Pipeline {
         stage('Deploy') {
            steps {
            script {
-                    sh 'java -jar target/quiz-app-1.0-SNAPSHOT.jar'
+                    bat 'docker run -p 8081:8081 --name quiz dev-quiz-img'
                   }
             
             }
