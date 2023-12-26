@@ -13,6 +13,7 @@ Pipeline {
         stage('build & test') {
           steps {
              script {
+
               bat 'mvn clean package'
               bat 'docker build -t dev-quiz-img'
               
@@ -22,14 +23,14 @@ Pipeline {
           
         stage('Deploy') {
            steps {
-           script {
+              script {
                     bat 'docker run -p 8081:8081 --name quiz dev-quiz-img'
                   }
             
-            }
+               }
            
-          }
+           }
        }
        
-  }
+   }
 }
