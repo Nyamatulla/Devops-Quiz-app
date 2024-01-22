@@ -45,13 +45,4 @@ pipeline {
         }
     }
 
-    post {
-        always {
-            script {
-                // Cleanup steps, if any
-                bat 'docker stop your-container-name'
-                bat 'docker rm your-container-name'
-            }
-        }
-    }
 }
