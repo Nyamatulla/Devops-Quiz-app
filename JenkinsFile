@@ -20,6 +20,16 @@ pipeline {
             }
         }
 
+        stage('build and push to nexus') {
+          steps {
+             configFileProvider([configFile(fileId: '40201249-cc58-4199-a7c7-f4141d8640da', variable: 'mavensettings')]) {
+                           
+                bat "mvn -s $mavensettings clean deploy -DskipTests=true"    
+
+              }
+          }
+       }
+
         stage('Deploy') {
             steps {
                 // Build Docker image
