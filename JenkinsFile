@@ -1,6 +1,16 @@
 pipeline {
     agent any
 
+
+    tools{
+
+         jdk 'jdk11'
+         maven 'maven3'
+    }
+
+    environment {
+        SCANNER_HOME=tool 'sonar-scanner'
+
     stages {
         stage('Checkout') {
             steps {
@@ -9,12 +19,24 @@ pipeline {
             }
         }
 
+         sstage("Sonarqube Analysis "){
+            steps{
+                withSonarQubeEnv('sonar-server') {
+                    bat 'mvn clean package'
+                    bat ''' mvn sonar:sonar $SCANNER_HOME/bin/sonar-scanner -Dsonar.url=http://localhost:9000/ -Dsonar.login=squ_57175fb85e5e04a2ec5b1cf671dd3b2ea14b156b -Dsonar.projectName=Dev-Quiz \
+                    -Dsonar.java.binaries=. \
+                    -Dsonar.projectKey=Dev-Quiz '''
+    
+                }
+            }
+        }
+
         stage('Build') {
             steps {
                 // Build the application using Maven
                 script {
                     echo 'Building the application'
-                    bat 'mvn clean package'
+                    bat 'mvn clean install'
                     echo 'Build successful'
                 }
             }
