@@ -1,15 +1,14 @@
 pipeline {
     agent any
 
-
-    tools{
-
-         jdk 'jdk11'
-         maven 'maven3'
+    tools {
+        jdk 'jdk11'
+        maven 'maven3'
     }
 
     environment {
-        SCANNER_HOME=tool 'sonar-scanner'
+        SCANNER_HOME = tool 'sonar-scanner'
+    }
 
     stages {
         stage('Checkout') {
@@ -19,15 +18,11 @@ pipeline {
             }
         }
 
-         sstage("Sonarqube Analysis "){
-            steps{
-                withSonarQubeEnv('sonar-server') {
-                    bat 'mvn clean package'
-                    bat ''' mvn sonar:sonar $SCANNER_HOME/bin/sonar-scanner -Dsonar.url=http://localhost:9000/ -Dsonar.login=squ_57175fb85e5e04a2ec5b1cf671dd3b2ea14b156b -Dsonar.projectName=Dev-Quiz \
-                    -Dsonar.java.binaries=. \
-                    -Dsonar.projectKey=Dev-Quiz '''
-    
-                }
+        stage("Sonarqube Analysis") {
+            steps {
+                bat """
+                    mvn clean package ${SCANNER_HOME}/bin/sonar-scanner -Dsonar.host.url=http://localhost:9000/ -Dsonar.login=squ_57175fb85e5e04a2ec5b1cf671dd3b2ea14b156b -Dsonar.projectName=Dev-Quiz -Dsonar.java.binaries=.
+                """
             }
         }
 
@@ -42,15 +37,13 @@ pipeline {
             }
         }
 
-        stage('build and push to nexus') {
-          steps {
-             configFileProvider([configFile(fileId: '40201249-cc58-4199-a7c7-f4141d8640da', variable: 'mavensettings')]) {
-                           
-                bat "mvn -s $mavensettings clean deploy -DskipTests=true"    
-
-              }
-          }
-       }
+        stage('Build and push to Nexus') {
+            steps {
+                configFileProvider([configFile(fileId: '40201249-cc58-4199-a7c7-f4141d8640da', variable: 'mavensettings')]) {
+                    bat "mvn -s $mavensettings clean deploy -DskipTests=true"
+                }
+            }
+        }
 
         stage('Deploy') {
             steps {
@@ -66,5 +59,4 @@ pipeline {
             }
         }
     }
-
 }
