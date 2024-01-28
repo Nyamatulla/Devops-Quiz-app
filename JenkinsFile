@@ -21,7 +21,8 @@ pipeline {
         stage("Sonarqube Analysis") {
             steps {
                 bat """
-                    mvn clean package ${SCANNER_HOME}/bin/sonar-scanner -Dsonar.host.url=http://localhost:9000/ -Dsonar.login=squ_57175fb85e5e04a2ec5b1cf671dd3b2ea14b156b -Dsonar.projectName=Dev-Quiz -Dsonar.java.binaries=.
+                    mvn clean package ${SCANNER_HOME}/bin/sonar-scanner -Dsonar.host.url=http://localhost:9000/ 
+                    -Dsonar.login=squ_57175fb85e5e04a2ec5b1cf671dd3b2ea14b156b -Dsonar.projectName=Dev-Quiz -Dsonar.java.binaries=.
                 """
             }
         }
